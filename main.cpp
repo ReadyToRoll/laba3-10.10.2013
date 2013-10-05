@@ -14,18 +14,11 @@ class Tree
 {
 
 public:
-    int n;
     node*root;
-    Tree()
-    {
-        root=0;
-    }
+    Tree();
     Tree(int t);
     void delTree(node *wer);
-    ~Tree()
-    {
-        delTree(root);
-    }
+    ~Tree();
     void push(node*&wer,int data);// Вставка элемента в дерево
     void show(node*wer);          // Вывод дерева на экран
     void Union(Tree &b);    //объединение
@@ -38,7 +31,6 @@ public:
     node*check(node*wer,int key);
 };
 
-
 node* Tree::check(node*wer,int key)
 {
     if(wer==0) return 0;
@@ -47,11 +39,8 @@ node* Tree::check(node*wer,int key)
     else return wer;
 }
 
-
-
 Tree::Tree(int t)
 {
-    n=t;
     root=0;
     for(int i=0; i<t; i++)
     {
@@ -61,6 +50,16 @@ Tree::Tree(int t)
         else
             t++;
     }
+}
+
+Tree::Tree()
+{
+    root=0;
+}
+
+Tree::~Tree()
+{
+    delTree(root);
 }
 
 void Tree::Union(Tree &tr2)
@@ -174,7 +173,7 @@ void Tree::show(node*wer)
 
 int main()
 {
-    int w=0,k,n;
+    int w=0,n;
     cout<<"Input a size of set: ";
     cin>>n;
     Tree tr(n);
