@@ -1,6 +1,5 @@
-#include <iostream>
+п»ї#include <iostream>
 #include <stdlib.h>
-#include <time.h>
 
 using namespace std;
 
@@ -24,14 +23,14 @@ public:
     {
         DelTree(root);
     }
-    void Push(node*&wer,int data);// Вставка элемента в дерево
-    void Look(node*wer);          //- Вывод дерева на экран
-    void PrintLeaves(node *wer);  // Вывод листьев дерева на экран
+    void Push(node*&wer,int data);// Р’СЃС‚Р°РІРєР° СЌР»РµРјРµРЅС‚Р° РІ РґРµСЂРµРІРѕ
+    void Look(node*wer);          //- Р’С‹РІРѕРґ РґРµСЂРµРІР° РЅР° СЌРєСЂР°РЅ
+    void PrintLeaves(node *wer);  // Р’С‹РІРѕРґ Р»РёСЃС‚СЊРµРІ РґРµСЂРµРІР° РЅР° СЌРєСЂР°РЅ
     bool is_in_tree(node*wer,int k);
-    Tree operator+(Tree &b);    //объединение
+    Tree operator+(Tree &b);    //РѕР±СЉРµРґРёРЅРµРЅРёРµ
     void Union(node*wer,Tree &buf);
-   // Tree operator-(Tree &b);    //пересечение
-   // Tree operator*(Tree &b);    //разность
+   // Tree operator-(Tree &b);    //РїРµСЂРµСЃРµС‡РµРЅРёРµ
+   // Tree operator*(Tree &b);    //СЂР°Р·РЅРѕСЃС‚СЊ
 };
 
 
