@@ -12,24 +12,37 @@ struct node
 
 class Tree
 {
-
-public:
+private:
     node*root;
+    void Union(node*wer,Tree &buf);
+    void difference(node*wer,Tree &buf, Tree &tr2);
+    void intersection(node*wer,Tree &buf, Tree &tr2);
+    void intersection(node*wer,Tree &buf, node*root);
+public:
+    void Union(Tree &b);    //объединение
+    void difference(Tree &b);    //разность
+    void intersection(Tree &b);    //пересечение
     Tree();
     Tree(int t);
     void delTree(node *wer);
     ~Tree();
     void push(node*&wer,int data);// Вставка элемента в дерево
-    void show(node*wer);          // Вывод дерева на экран
-    void Union(Tree &b);    //объединение
-    void Union1(node*wer,Tree &buf);
-    void difference(Tree &b);    //разность
-    void difference1(node*wer,Tree &buf, Tree &tr2);
-    void interseption(Tree &b);    //пересечение
-    void interseption1(node*wer,Tree &buf, Tree &tr2);
-    void interseption2(node*wer,Tree &buf, node*root);
+    void push(int data);
+    void show();          // Вывод дерева на экран
+    void show(node*wer);
+    node*check(int key);
     node*check(node*wer,int key);
+    bool is_empty();
 };
+
+//node* Tree::check(node*wer,int key)
+node* Tree::check(int key)
+{
+    if(root==0) return 0;
+    else if(key<root->n) return check(root->left,key);
+    else if(key>root->n) return check(root->right,key);
+    else return root;
+}
 
 node* Tree::check(node*wer,int key)
 {
@@ -62,84 +75,86 @@ Tree::~Tree()
     delTree(root);
 }
 
+void demonstrateAfterOperation(Tree &buf)
+{
+    cout<<endl<<"New set:"<<endl;
+    if(buf.is_empty()==true)
+        cout<<"Nothing.."<<endl;
+    else
+    buf.show();
+    cout<<endl<<endl;
+}
+
 void Tree::Union(Tree &tr2)
 {
     Tree buf;
-    Union1(root,buf);
-    Union1(tr2.root,buf);
-    cout<<endl<<"Union:"<<endl;
-    buf.show(buf.root);
-    cout<<endl<<endl;
-    buf.~Tree();
+    Union(root,buf);
+    Union(tr2.root,buf);
+    demonstrateAfterOperation(buf);
 }
 
-void Tree::Union1(node*wer,Tree &buf)
+void Tree::Union(node*wer,Tree &buf)
 {
     if(wer!=0)
     {
-        Union1(wer->left,buf);
+        Union(wer->left,buf);
         push(buf.root,wer->n);
-        Union1(wer->right,buf);
+        Union(wer->right,buf);
     }
 }
 
 void Tree::difference(Tree &tr2)
 {
     Tree buf;
-    difference1(root,buf,tr2);
-    cout<<endl<<"difference:"<<endl;
-    buf.show(buf.root);
-    cout<<endl<<endl;
-    buf.~Tree();
+    difference(root,buf,tr2);
+    demonstrateAfterOperation(buf);
 }
 
-void Tree::difference1(node*wer,Tree &buf,Tree &tr2)
+void Tree::difference(node*wer,Tree &buf,Tree &tr2)
 {
     if(wer!=0)
     {
-        difference1(wer->left,buf,tr2);
+        difference(wer->left,buf,tr2);
         if(tr2.check(tr2.root,wer->n)==0)
-            push(buf.root,wer->n);
-        difference1(wer->right,buf,tr2);
+            buf.push(wer->n);
+        difference(wer->right,buf,tr2);
     }
 }
 
-void Tree::interseption(Tree &tr2)
+void Tree::intersection(Tree &tr2)
 {
     Tree buf;
-    interseption1(root,buf,tr2);
-    interseption2(tr2.root,buf,root);
-    cout<<endl<<"Interseption:"<<endl;
-    buf.show(buf.root);
-    cout<<endl<<endl;
-    buf.~Tree();
+    intersection(root,buf,tr2);
+    intersection(tr2.root,buf,root);
+    demonstrateAfterOperation(buf);
 }
 
-void Tree::interseption1(node*wer,Tree &buf,Tree &tr2)
+void Tree::intersection(node*wer,Tree &buf,Tree &tr2)
 {
     if(wer!=0)
     {
-        interseption1(wer->left,buf,tr2);
+        intersection(wer->left,buf,tr2);
         if(tr2.check(tr2.root,wer->n)!=0)
             push(buf.root,wer->n);
-        interseption1(wer->right,buf,tr2);
+        intersection(wer->right,buf,tr2);
     }
 }
 
-void Tree::interseption2(node*wer,Tree &buf,node*root)
+void Tree::intersection(node*wer,Tree &buf,node*root)
 {
     if(wer!=0)
     {
-        interseption2(wer->left,buf,root);
+        intersection(wer->left,buf,root);
         if(check(root,wer->n)!=0)
             push(buf.root,wer->n);
-        interseption2(wer->right,buf,root);
+        intersection(wer->right,buf,root);
     }
 }
 
 void Tree::delTree(node *wer)
 {
-    if(root!=0)
+    if(wer==0)return;
+    else if((wer->left==0)&&(wer->right==0))
     {
         if(wer->left!=0)delTree(wer->left);
         if(wer->right!=0)delTree(wer->right);
@@ -161,16 +176,48 @@ void Tree::push(node*&wer,int data)
     else wer->count++;
 }
 
-void Tree::show(node*wer)
+void Tree::push(int data)
 {
-    if(wer!=0)
+    if(root==0)
     {
-        show(wer->left);
-        cout<<wer->n<<" ";
-        show(wer->right);
+        root=new node;
+        root->n=data;
+        root->left=0;
+        root->right=0;
+        root->count=1;
+    }
+    else if(data<root->n)push(root->left,data);
+    else if(data>root->n)push(root->right,data);
+    else root->count++;
+}
+
+void Tree::show()
+{
+    if(root!=0)
+    {
+        show(root->left);
+        cout<<root->n<<" ";
+        show(root->right);
     }
 }
 
+bool Tree::is_empty()
+{
+    if(root==0)
+        return true;
+    else
+        return false;
+}
+
+void Tree::show(node*root)
+{
+    if(root!=0)
+    {
+        show(root->left);
+        cout<<root->n<<" ";
+        show(root->right);
+    }
+}
 int main()
 {
     int w=0,n;
@@ -186,7 +233,7 @@ int main()
         cout<<" 3 - is in set"<<endl;
         cout<<" 4 - union"<<endl;
         cout<<" 5 - difference"<<endl;
-        cout<<" 6 - interception"<<endl;
+        cout<<" 6 - intersection"<<endl;
         cout<<" 8 - exit"<<endl<<endl;
         cin>>w;
         switch(w)
@@ -195,79 +242,77 @@ int main()
             int data;
             cout<<"Enter value ";
             cin>>data;
-            if(tr.check(tr.root,data)!=0)
+            if(tr.check(data)!=0)
                 cout<<"value already in set"<<endl;
             else
-                tr.push(tr.root,data);
+                tr.push(data);
             break;
         case 2:
-            if(tr.root==0)
-                cout<<"First Set empty";
+            if(tr.is_empty()==true)
+                cout<<"First set empty";
             else
             {
                 cout<<"Set 1:"<<endl;
-                tr.show(tr.root);
+                tr.show();
             }
             cout<<endl<<endl;
-            if(tr2.root==0)
-                cout<<"Second Set empty";
+            if(tr2.is_empty()==true)
+                cout<<"Second set empty";
             else
             {
                 cout<<"Set 2:"<<endl;
-                tr2.show(tr2.root);
+                tr2.show();
             }
             cout<<endl<<endl;
             break;
-        case 3:
-        {
-            if(tr.root==0)
-                cout<<"Tree empty";
-            else
-            {
-                node *u;
-                int key;
-                cout<<"enter value to check: ";
-                cin>>key;
-                if((u=tr.check(tr.root,key))!=0)
-                {
-                    cout<<u->count<<" piece checked"<<endl<<endl;
-                }
-                else cout<<"Nothing";
-            }
-            break;
-        }
-        case 4:
-        {
-            cout<<"Set 1:"<<endl;
-            tr.show(tr.root);
-            cout<<endl<<"Set 2:"<<endl;
-            tr2.show(tr2.root);
-            tr.Union(tr2);
-            break;
-        }
-        case 5:
-        {
-            cout<<"Set 1:"<<endl;
-            tr.show(tr.root);
-            cout<<endl<<"Set 2:"<<endl;
-            tr2.show(tr2.root);
-            tr.difference(tr2);
-            break;
-        }
-        case 6:
-        {
-            cout<<"Set 1:"<<endl;
-            tr.show(tr.root);
-            cout<<endl<<"Set 2:"<<endl;
-            tr2.show(tr2.root);
-            tr.interseption(tr2);
-            break;
-        }
+               case 3:
+               {
+                   if(tr.is_empty()==true)
+                       cout<<"Tree empty";
+                   else
+                   {
+                       node *u;
+                       int key;
+                       cout<<"enter value to check: ";
+                       cin>>key;
+                       if((u=tr.check(key))!=0)
+                       {
+                           cout<<u->count<<" piece checked"<<endl<<endl;
+                       }
+                       else cout<<"Nothing";
+                   }
+                   break;
+               }
+               case 4:
+               {
+                   cout<<"Set 1:"<<endl;
+                   tr.show();
+                   cout<<endl<<"Set 2:"<<endl;
+                   tr2.show();
+                   tr.Union(tr2);
+                   break;
+               }
+               case 5:
+               {
+                   cout<<"Set 1:"<<endl;
+                   tr.show();
+                   cout<<endl<<"Set 2:"<<endl;
+                   tr2.show();
+                   tr.difference(tr2);
+                   break;
+               }
+               case 6:
+               {
+                   cout<<"Set 1:"<<endl;
+                   tr.show();
+                   cout<<endl<<"Set 2:"<<endl;
+                   tr2.show();
+                   tr.intersection(tr2);
+                   break;
+               }
         case 8:
             break;
         }
     }
     while(w!=8);
-    tr.~Tree();
-    tr2.~Tree();
 }
