@@ -35,7 +35,6 @@ public:
     bool is_empty();
 };
 
-//node* Tree::check(node*wer,int key)
 node* Tree::check(int key)
 {
     if(root==0) return 0;
@@ -81,7 +80,7 @@ void demonstrateAfterOperation(Tree &buf)
     if(buf.is_empty()==true)
         cout<<"Nothing.."<<endl;
     else
-    buf.show();
+        buf.show();
     cout<<endl<<endl;
 }
 
@@ -234,7 +233,7 @@ int main()
         cout<<" 4 - union"<<endl;
         cout<<" 5 - difference"<<endl;
         cout<<" 6 - intersection"<<endl;
-        cout<<" 8 - exit"<<endl<<endl;
+        cout<<" 7 - exit"<<endl<<endl;
         cin>>w;
         switch(w)
         {
@@ -265,54 +264,54 @@ int main()
             }
             cout<<endl<<endl;
             break;
-               case 3:
-               {
-                   if(tr.is_empty()==true)
-                       cout<<"Tree empty";
-                   else
-                   {
-                       node *u;
-                       int key;
-                       cout<<"enter value to check: ";
-                       cin>>key;
-                       if((u=tr.check(key))!=0)
-                       {
-                           cout<<u->count<<" piece checked"<<endl<<endl;
-                       }
-                       else cout<<"Nothing";
-                   }
-                   break;
-               }
-               case 4:
-               {
-                   cout<<"Set 1:"<<endl;
-                   tr.show();
-                   cout<<endl<<"Set 2:"<<endl;
-                   tr2.show();
-                   tr.Union(tr2);
-                   break;
-               }
-               case 5:
-               {
-                   cout<<"Set 1:"<<endl;
-                   tr.show();
-                   cout<<endl<<"Set 2:"<<endl;
-                   tr2.show();
-                   tr.difference(tr2);
-                   break;
-               }
-               case 6:
-               {
-                   cout<<"Set 1:"<<endl;
-                   tr.show();
-                   cout<<endl<<"Set 2:"<<endl;
-                   tr2.show();
-                   tr.intersection(tr2);
-                   break;
-               }
-        case 8:
+        case 3:
+        {
+            if(tr.is_empty()==true)
+                cout<<"Tree empty";
+            else
+            {
+                node *u;
+                int key;
+                cout<<"enter value to check: ";
+                cin>>key;
+                if((u=tr.check(key))!=0)
+                {
+                    cout<<u->count<<" piece checked"<<endl<<endl;
+                }
+                else cout<<"Nothing";
+            }
+            break;
+        }
+        case 4:
+        {
+            cout<<"Set 1:"<<endl;
+            tr.show();
+            cout<<endl<<"Set 2:"<<endl;
+            tr2.show();
+            tr.Union(tr2);
+            break;
+        }
+        case 5:
+        {
+            cout<<"Set 1:"<<endl;
+            tr.show();
+            cout<<endl<<"Set 2:"<<endl;
+            tr2.show();
+            tr.difference(tr2);
+            break;
+        }
+        case 6:
+        {
+            cout<<"Set 1:"<<endl;
+            tr.show();
+            cout<<endl<<"Set 2:"<<endl;
+            tr2.show();
+            tr.intersection(tr2);
+            break;
+        }
+        case 7:
             break;
         }
     }
-    while(w!=8);
+    while(w!=7);
 }
