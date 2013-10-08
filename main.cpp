@@ -6,7 +6,6 @@ using namespace std;
 struct node
 {
     int n;
-    int count;
     node*left,*right;
 };
 
@@ -19,11 +18,13 @@ private:
     void intersection(node*wer,Tree &buf, Tree &tr2);
     void intersection(node*wer,Tree &buf, node*root);
 public:
-    void Union(Tree &b);    //объединение
-    void difference(Tree &b);    //разность
-    void intersection(Tree &b);    //пересечение
+    Tree operator+(Tree &b);
+    Tree operator-(Tree &b);
+    Tree operator*(Tree &b);
     Tree();
     Tree(int t);
+    Tree (const Tree &ob);
+    void copyTree(node *&rootnew, node *rootold);
     void delTree(node *wer);
     ~Tree();
     void push(node*&wer,int data);// Вставка элемента в дерево
@@ -33,8 +34,44 @@ public:
     node*check(int key);
     node*check(node*wer,int key);
     bool is_empty();
+    Tree& operator = (const Tree &ob);
 };
 
+Tree& Tree::operator = (const Tree &ob)
+{
+    if(this==&ob) return *this;
+    delTree(root);
+    copyTree(root,ob.root);
+    return *this;
+}
+
+Tree::Tree (const Tree &ob)
+{
+    if (ob.root==0)
+        root=0;
+    else
+    {
+        root=new node;
+        root->n=ob.root->n;
+        root->left=0;
+        root->right=0;
+        copyTree(root, ob.root);
+    }
+}
+
+void Tree::copyTree(node *&rootnew, node *rootold)
+{
+    if (rootold->left!=0)
+    {
+        push(rootnew, (rootold->left)->n);
+        copyTree(rootnew, rootold->left);
+    }
+    if (rootold->right!=0)
+    {
+        push(rootnew, (rootold->right)->n);
+        copyTree(rootnew, rootold->right);
+    }
+}
 node* Tree::check(int key)
 {
     if(root==0) return 0;
@@ -74,22 +111,12 @@ Tree::~Tree()
     delTree(root);
 }
 
-void demonstrateAfterOperation(Tree &buf)
-{
-    cout<<endl<<"New set:"<<endl;
-    if(buf.is_empty()==true)
-        cout<<"Nothing.."<<endl;
-    else
-        buf.show();
-    cout<<endl<<endl;
-}
-
-void Tree::Union(Tree &tr2)
+Tree Tree::operator+(Tree &tr2)
 {
     Tree buf;
     Union(root,buf);
     Union(tr2.root,buf);
-    demonstrateAfterOperation(buf);
+    return buf;
 }
 
 void Tree::Union(node*wer,Tree &buf)
@@ -102,11 +129,11 @@ void Tree::Union(node*wer,Tree &buf)
     }
 }
 
-void Tree::difference(Tree &tr2)
+Tree Tree::operator-(Tree &tr2)
 {
     Tree buf;
     difference(root,buf,tr2);
-    demonstrateAfterOperation(buf);
+    return buf;
 }
 
 void Tree::difference(node*wer,Tree &buf,Tree &tr2)
@@ -120,12 +147,12 @@ void Tree::difference(node*wer,Tree &buf,Tree &tr2)
     }
 }
 
-void Tree::intersection(Tree &tr2)
+Tree Tree::operator*(Tree &tr2)
 {
     Tree buf;
     intersection(root,buf,tr2);
     intersection(tr2.root,buf,root);
-    demonstrateAfterOperation(buf);
+    return buf;
 }
 
 void Tree::intersection(node*wer,Tree &buf,Tree &tr2)
@@ -168,11 +195,9 @@ void Tree::push(node*&wer,int data)
         wer->n=data;
         wer->left=0;
         wer->right=0;
-        wer->count=1;
     }
     else if(data<wer->n)push(wer->left,data);
     else if(data>wer->n)push(wer->right,data);
-    else wer->count++;
 }
 
 void Tree::push(int data)
@@ -183,11 +208,9 @@ void Tree::push(int data)
         root->n=data;
         root->left=0;
         root->right=0;
-        root->count=1;
     }
     else if(data<root->n)push(root->left,data);
     else if(data>root->n)push(root->right,data);
-    else root->count++;
 }
 
 void Tree::show()
@@ -276,7 +299,7 @@ int main()
                 cin>>key;
                 if((u=tr.check(key))!=0)
                 {
-                    cout<<u->count<<" piece checked"<<endl<<endl;
+                    cout<<"Founded"<<endl<<endl;
                 }
                 else cout<<"Nothing";
             }
@@ -288,7 +311,10 @@ int main()
             tr.show();
             cout<<endl<<"Set 2:"<<endl;
             tr2.show();
-            tr.Union(tr2);
+            cout<<endl;
+            Tree tr3;
+            tr3=tr+tr2;
+            tr3.show();
             break;
         }
         case 5:
@@ -297,7 +323,10 @@ int main()
             tr.show();
             cout<<endl<<"Set 2:"<<endl;
             tr2.show();
-            tr.difference(tr2);
+            cout<<endl;
+            Tree tr3;
+            tr3=tr-tr2;
+            tr3.show();
             break;
         }
         case 6:
@@ -306,7 +335,10 @@ int main()
             tr.show();
             cout<<endl<<"Set 2:"<<endl;
             tr2.show();
-            tr.intersection(tr2);
+            cout<<endl;
+            Tree tr3;
+            tr3=tr*tr2;
+            tr3.show();
             break;
         }
         case 7:
